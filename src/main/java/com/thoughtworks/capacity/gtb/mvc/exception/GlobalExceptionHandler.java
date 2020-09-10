@@ -14,4 +14,10 @@ public class GlobalExceptionHandler {
         ErrorResult errorResult = new ErrorResult(message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
     }
+
+    @ExceptionHandler(UserExistException.class)
+    public ResponseEntity<ErrorResult> handle(UserExistException ex) {
+        ErrorResult errorResult = new ErrorResult(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
+    }
 }

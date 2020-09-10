@@ -2,6 +2,7 @@ package com.thoughtworks.capacity.gtb.mvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.capacity.gtb.mvc.domain.User;
+import com.thoughtworks.capacity.gtb.mvc.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,5 +74,15 @@ public class UserControllerTest {
         mockMvc.perform(post("/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", is("邮箱地址不合法")));
+    }
+
+    @Test
+    void should_register_failed_if_user_exists () throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        User newUser = new User("siyu", "133666", "siyu@gmail.com");
+        String jsonString = objectMapper.writeValueAsString(newUser);
+        mockMvc.perform(post("/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("用户已存在")));
     }
 }
