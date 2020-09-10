@@ -22,10 +22,10 @@ public class UserControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    ObjectMapper objectMapper = new ObjectMapper();
     @Test
     void should_register_user() throws Exception {
         User newUser = new User("Siyu", "133666", "siyu@gmail.com");
-        ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(newUser);
         mockMvc.perform(post("/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
@@ -35,7 +35,6 @@ public class UserControllerTest {
     void should_input_valid_username() throws Exception {
         // 用户名长度有误
         User newUser = new User("si", "133666", "siyu@gmail.com");
-        ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(newUser);
         mockMvc.perform(post("/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -58,7 +57,6 @@ public class UserControllerTest {
 
     @Test
     void should_input_valid_password () throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
         User newUser = new User("siyu", "133", "siyu@gmail.com");
         String jsonString = objectMapper.writeValueAsString(newUser);
         mockMvc.perform(post("/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
@@ -68,7 +66,6 @@ public class UserControllerTest {
 
     @Test
     void should_input_valid_email () throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
         User newUser = new User("siyu", "133666", "siyugmail.com");
         String jsonString = objectMapper.writeValueAsString(newUser);
         mockMvc.perform(post("/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
@@ -78,7 +75,6 @@ public class UserControllerTest {
 
     @Test
     void should_register_failed_if_user_exists () throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
         User newUser = new User("siyu", "133666", "siyu@gmail.com");
         String jsonString = objectMapper.writeValueAsString(newUser);
         mockMvc.perform(post("/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
