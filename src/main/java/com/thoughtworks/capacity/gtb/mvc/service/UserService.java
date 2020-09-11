@@ -16,10 +16,14 @@ public class UserService {
     }
 
     public void register(User newUser) {
-        if (users.stream().filter(user -> user.getUsername().equals(newUser.getUsername())).count() > 0) {
+        if (isExist(newUser.getUsername())) {
             throw new UserExistException("用户已存在");
         }
         users.add(newUser);
+    }
+
+    public boolean isExist(String username) {
+        return users.stream().filter(user -> user.getUsername().equals(username)).count() > 0;
     }
 
 }
