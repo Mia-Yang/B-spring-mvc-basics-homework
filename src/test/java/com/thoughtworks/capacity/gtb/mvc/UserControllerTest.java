@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -87,5 +88,17 @@ public class UserControllerTest {
         mockMvc.perform(post("/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", is("用户已存在")));
+    }
+
+    @Test
+    void should_login_success () throws Exception {
+        User newUser = new User("siyu", "1234567");
+
+        mockMvc.perform(get("/login").param("username", newUser.getUsername()).param("password", newUser.getPassword()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username", is("siyu")))
+                .andExpect(jsonPath("$.password", is("1234567")))
+                .andExpect(jsonPath("$.id", is(0)))
+                .andExpect(jsonPath("$.email", is("siyu@gmail.com")));
     }
 }

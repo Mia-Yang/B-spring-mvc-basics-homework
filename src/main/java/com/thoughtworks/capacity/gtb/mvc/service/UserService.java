@@ -2,6 +2,7 @@ package com.thoughtworks.capacity.gtb.mvc.service;
 
 import com.thoughtworks.capacity.gtb.mvc.domain.User;
 import com.thoughtworks.capacity.gtb.mvc.exception.UserExistException;
+import com.thoughtworks.capacity.gtb.mvc.exception.UserLoginException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,14 +17,24 @@ public class UserService {
     }
 
     public void register(User newUser) {
-        if (isExist(newUser.getUsername())) {
+        if (findUser(newUser.getUsername()) != null) {
             throw new UserExistException("用户已存在");
         }
         users.add(newUser);
     }
 
-    public boolean isExist(String username) {
-        return users.stream().filter(user -> user.getUsername().equals(username)).count() > 0;
+    public User login(String username, String password) {
+        if (findUser(username) == null) {
+            throw new UserLoginException("用户名或密码错误");
+        }
+        User findUser = findUser(username);
+        if (!findUser.getPassword().equals(password)) {
+            throw new UserLoginException("用户名或密码错误");
+        }
+        return findUser;
     }
 
+    public User findUser(String username) {
+        return users.stream().filter(user -> user.getUsername().equals(username)).findFirst().get();
+    }
 }

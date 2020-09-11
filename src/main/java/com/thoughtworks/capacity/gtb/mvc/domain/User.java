@@ -13,6 +13,8 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
+    int id;
+
     @Size(min = 3, max = 10, message = "用户名不合法")
     @Pattern(regexp = "^[0-9a-zA-Z_]+$", message = "用户名不合法")
     @NotBlank(message = "用户名不合法")
@@ -23,4 +25,16 @@ public class User {
 
     @Email(message = "邮箱地址不合法")
     String email;
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
 }
