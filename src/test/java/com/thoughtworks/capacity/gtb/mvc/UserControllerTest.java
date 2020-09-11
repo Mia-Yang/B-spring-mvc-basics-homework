@@ -2,8 +2,6 @@ package com.thoughtworks.capacity.gtb.mvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.capacity.gtb.mvc.domain.User;
-import com.thoughtworks.capacity.gtb.mvc.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -100,5 +98,14 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.password", is("1234567")))
                 .andExpect(jsonPath("$.id", is(0)))
                 .andExpect(jsonPath("$.email", is("siyu@gmail.com")));
+    }
+
+    @Test
+    void should_return_error () throws Exception {
+        User newUser = new User("siyu", "12345678");
+
+        mockMvc.perform(get("/login").param("username", newUser.getUsername()).param("password", newUser.getPassword()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("用户名或密码错误")));
     }
 }
